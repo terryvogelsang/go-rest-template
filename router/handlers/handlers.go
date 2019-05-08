@@ -6,7 +6,6 @@ import (
 	"context"
 	models "mycnc-rest-api/models"
 	middlewares "mycnc-rest-api/router/middlewares"
-	"mycnc-rest-api/utils"
 	http "net/http"
 	"reflect"
 	"runtime"
@@ -41,13 +40,6 @@ func CustomHandle(env *models.Env, handlers ...Handler) http.Handler {
 		userID, err := middlewares.AuthMiddleware(env, w, r)
 
 		if err != nil {
-
-			if utils.CaseInsensitiveContains(err.Error(), "no targets configured") {
-				responseDetails = customhttpresponse.NewResponseDetailsWithDebug(err.Error(), env.Config.Service, action, customhttpresponse.CodeInternalError)
-				customhttpresponse.WriteResponse(nil, responseDetails, w)
-				return
-			}
-
 			responseDetails = customhttpresponse.NewResponseDetailsWithDebug(err.Error(), env.Config.Service, action, customhttpresponse.CodeInvalidToken)
 			customhttpresponse.WriteResponse(nil, responseDetails, w)
 			return
