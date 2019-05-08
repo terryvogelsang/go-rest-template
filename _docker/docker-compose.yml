@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+  redis-sessions-cache:
+    build: redis/
+    image: mycnc/redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    container_name: mycnc_redis-sessions-cache
+    ports:
+      - "${DOCKER_BINDING_IP:-127.0.0.1}:6379:6379"
+    restart: always
+    networks:
+      - mycnc
+
+  mariadb:
+    build: mariadb/
+    image: mycnc/mariadb
+    restart: always
+    container_name: mycnc_mariadb
+    ports:
+      - "${DOCKER_BINDING_IP:-127.0.0.1}:3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    networks:
+      - mycnc
+
+networks:
+  mycnc:
+    driver: "bridge"

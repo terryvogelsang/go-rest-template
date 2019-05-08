@@ -1,0 +1,7 @@
+{   
+    "service": "mycnc-rest-api",
+    "listeningPort": 8088,
+    "adminUsers" : [
+        "terry.vogelsang@gmail.com"
+    ]
+}

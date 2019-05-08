@@ -1,0 +1,69 @@
+User
+-
+ID PK string
+Email string
+Password string
+FirstName string
+LastName string
+ProfilePicURL string
+
+Client
+-
+ID string
+Name string
+
+Contact
+-
+ID PK string
+FirstName string
+LastName string
+Phone string
+Email string
+
+Tag
+-
+ID PK string
+Name string
+
+Project
+- 
+ID PK string
+Name string
+ClientID string FK >- Client.ID
+Tags string FK >- Tag.ID
+Contacts string FK >- Contact.ID
+Targets string FK >- ServerTarget.ID
+
+ServerTarget
+-
+ID PK string
+ProjectID string FK >- Project.ID
+IPv4 string
+IPv6 string
+OS string
+Hostnames string FK >- Hostname.ID
+Services string FK >- Service.ID
+
+Hostname 
+-
+ID PK string
+Host string
+
+File
+-
+ID string PK
+Author string FK >- User.ID
+Path string
+
+Service
+-
+ID PK string
+ServerTargetID string PK FK >- ServerTarget.ID
+Tags string FK >- Tag.ID
+Port int
+Protocol string
+Name string
+Status string
+Files string FK >- File.ID
+AssignedUser string FK >- User.ID
+Note string
