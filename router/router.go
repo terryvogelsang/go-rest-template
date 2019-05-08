@@ -49,6 +49,7 @@ func Listen(env *models.Env) {
 	regattaV1 := v1.PathPrefix("/regatta").Subrouter()
 	regattaV1.Handle("", handlers.CustomHandle(env, handlers.CreateRegatta)).Methods("POST")
 	regattaV1.Handle("/{regattaID}", handlers.CustomHandle(env, handlers.ReadRegatta)).Methods("GET")
+	regattaV1.Handle("/{regattaID}/boat/{boatID}/chrono", handlers.CustomHandle(env, handlers.UpdateRegattaBoatChrono)).Methods("PUT")
 
 	corsHandler := cors.New(cors.Options{
 		AllowedHeaders:   []string{"X-Requested-With"},

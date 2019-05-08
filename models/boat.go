@@ -9,7 +9,7 @@ import (
 // A boat belongs to a Class
 type Boat struct {
 	ID         string    `json:"id" gorm:"primary_key;unique;not null;"`
-	OwnerID    string    `json:"ownerID" gorm:"not null;"`
+	OwnerID    string    `json:"-" gorm:"not null;"`
 	Name       string    `json:"name,omitempty" gorm:"not null;"`
 	ClassID    string    `json:"-" gorm:"not null;"`
 	Class      BoatClass `json:"class,omitempty" gorm:"not null;foreignkey:ClassID;"`

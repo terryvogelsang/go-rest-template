@@ -3,6 +3,7 @@ package models
 import (
 	json "encoding/json"
 	utils "mycnc-rest-api/utils"
+	"time"
 
 	gormlib "github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -25,6 +26,7 @@ type GORMInterface interface {
 	UpdateUserInfos(user *User, userUpdateRequestBody *UserUpdateRequestBody) error
 	UpdateUserBoats(user *User, boatCreateRequestBody *BoatCreateRequestBody) error
 	UpdateUserPassword(newHashedPassword string) error
+	UpdateRegattaBoatChrono(regatta *Regatta, boatID string) error
 	DeleteUser(user *User) error
 	IsRecordNotFoundError(err error) bool
 }
@@ -57,7 +59,9 @@ func NewGORM(connectionURL string) *GORM {
 	db.AutoMigrate(&Regatta{})
 	db.AutoMigrate(&Ranking{})
 	db.AutoMigrate(&Rank{})
+	db.AutoMigrate(&ChronoEntry{})
 
+	// Default boat class here
 	dartClass := &BoatClass{
 		Name:                 "Dart",
 		YardstickCoefficient: 50,
@@ -220,6 +224,28 @@ func (gorm *GORM) UpdateUserInfos(user *User, userUpdateRequestBody *UserUpdateR
 func (gorm *GORM) UpdateUserPassword(newHashedPassword string) error {
 
 	return gorm.Database.Select("password").Updates(map[string]interface{}{"password": newHashedPassword}).Error
+}
+
+func (gorm *GORM) UpdateRegattaBoatChrono(regatta *Regatta, boatID string) error {
+
+	var count int
+	err := gorm.Database.Model(&Boat{}).Where("id = ?", boatID).Count(&count).Error
+
+	if err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return gormlib.ErrRecordNotFound
+	}
+
+	boatChrono := ChronoEntry{
+		ID:        uuid.NewV4().String(),
+		BoatID:    boatID,
+		Timestamp: time.Now(),
+	}
+
+	return gorm.Database.Model(regatta).Association("ChronosEntries").Append(boatChrono).Error
 }
 
 // UpdateUserBoats : Add new boat to user in DB

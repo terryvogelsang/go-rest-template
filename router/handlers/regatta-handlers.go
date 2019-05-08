@@ -47,8 +47,44 @@ func ReadRegatta(env *models.Env, w http.ResponseWriter, r *http.Request) (strin
 	params := mux.Vars(r)
 	regattaID := params["regattaID"]
 
-	// Add user to DB
+	// Get regatta from DB
 	regatta, err := env.GORM.ReadRegattaFromID(regattaID)
+
+	if err != nil {
+		if env.GORM.IsRecordNotFoundError((err)) {
+			return customhttpresponse.CodeDoesNotExist, err
+		}
+
+		return customhttpresponse.CodeInternalError, err
+	}
+
+	responseDetails := customhttpresponse.NewResponseDetails(env.Config.Service, utils.GetCurrentFuncName(), customhttpresponse.CodeSuccess)
+	customhttpresponse.WriteResponse(regatta, responseDetails, w)
+
+	return customhttpresponse.CodeSuccess, nil
+}
+
+// UpdateRegattaBoatChrono : Add a chrono to a boat in a regatta context
+func UpdateRegattaBoatChrono(env *models.Env, w http.ResponseWriter, r *http.Request) (string, error) {
+
+	// Parse regattaID from URL
+	params := mux.Vars(r)
+	regattaID := params["regattaID"]
+	boatID := params["boatID"]
+
+	// Get regatta from DB
+	regatta, err := env.GORM.ReadRegattaFromID(regattaID)
+
+	if err != nil {
+		if env.GORM.IsRecordNotFoundError((err)) {
+			return customhttpresponse.CodeDoesNotExist, err
+		}
+
+		return customhttpresponse.CodeInternalError, err
+	}
+
+	// Parse Request Body and create boat struct
+	err = env.GORM.UpdateRegattaBoatChrono(regatta, boatID)
 
 	if err != nil {
 		if env.GORM.IsRecordNotFoundError((err)) {
