@@ -1,2 +1,5 @@
-# vulnlabs-rest-api
-Go REST API Template with logging &amp; custom HTTP Response
+# Go REST API Template
+
+This repository contains a Golang REST API template including GORM support + custom http response & logging.
+
+
