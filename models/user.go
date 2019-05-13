@@ -20,7 +20,6 @@ type User struct {
 	LastName          string         `json:"lastName,omitempty" gorm:"not null;"`
 	PhoneNumber       string         `json:"phoneNumber,omitempty" gorm:"not null;"`
 	ProfilePictureURL string         `json:"profilePictureURL,omitempty"`
-	IsCommittee       bool           `json:"isCommittee" gorm:"not null;"`
 	Role              ReadOnlyString `json:"role,omitempty" gorm:"not null;"`
 }
 
