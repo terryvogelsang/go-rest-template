@@ -1,4 +1,4 @@
-module mycnc-rest-api
+module vulnlabs-rest-api
 
 go 1.12
 

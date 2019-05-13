@@ -4,18 +4,18 @@ services:
 
   redis-sessions-cache:
     build: redis/
-    image: mycnc/redis
+    image: vulnlabs/redis
     command: redis-server /usr/local/etc/redis/redis.conf
     container_name: mycnc_redis-sessions-cache
     ports:
       - "${DOCKER_BINDING_IP:-127.0.0.1}:6379:6379"
     restart: always
     networks:
-      - mycnc
+      - vulnlabs
 
   mariadb:
     build: mariadb/
-    image: mycnc/mariadb
+    image: vulnlabs/mariadb
     restart: always
     container_name: mycnc_mariadb
     ports:
@@ -23,8 +23,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
     networks:
-      - mycnc
+      - vulnlabs
 
 networks:
-  mycnc:
+  vulnlabs:
     driver: "bridge"

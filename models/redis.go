@@ -2,7 +2,7 @@ package models
 
 import (
 	fmt "fmt"
-	utils "mycnc-rest-api/utils"
+	utils "vulnlabs-rest-api/utils"
 
 	"github.com/gomodule/redigo/redis"
 	redisgo "github.com/gomodule/redigo/redis"

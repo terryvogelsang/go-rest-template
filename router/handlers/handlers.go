@@ -4,8 +4,8 @@ import (
 
 	// Native Go Libs
 	"context"
-	models "mycnc-rest-api/models"
-	middlewares "mycnc-rest-api/router/middlewares"
+	models "vulnlabs-rest-api/models"
+	middlewares "vulnlabs-rest-api/router/middlewares"
 	http "net/http"
 	"reflect"
 	"runtime"

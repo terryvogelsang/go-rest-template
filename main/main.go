@@ -8,15 +8,15 @@ import (
 	os "os"
 
 	// Project Libs
-	models "mycnc-rest-api/models"
-	router "mycnc-rest-api/router"
+	models "vulnlabs-rest-api/models"
+	router "vulnlabs-rest-api/router"
 )
 
 var (
 	GlobalConfig      *models.Config
 	GORMDBUser        = "root"
 	GORMDBPassword    = "example"
-	GORMDBName        = "mycnc"
+	GORMDBName        = "vulnlabs"
 	GORMConnectionURL = fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local", GORMDBUser, GORMDBPassword, GORMDBName)
 	RedisHost         = "localhost"
 	RedisPort         = 6379

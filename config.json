@@ -1,7 +1,7 @@
 {   
-    "service": "mycnc-rest-api",
+    "service": "vulnlabs-rest-api",
     "listeningPort": 8088,
     "adminUsers" : [
-        "terry.vogelsang@gmail.com"
+        "example@mail.com"
     ]
 }

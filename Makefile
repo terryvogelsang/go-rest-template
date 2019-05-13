@@ -8,4 +8,4 @@ endef
 .PHONY: run
 run:
 	$(call Starting server ...")
-	@MYCNC_REST_API_CONFIG_FILE_PATH=${PWD}/config.json GOPATH=${PWD}/.gopath go run main/main.go
+	@VULNLABS_REST_API_CONFIG_FILE_PATH=${PWD}/config.json GOPATH=${PWD}/.gopath go run main/main.go

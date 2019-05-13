@@ -1,10 +1,14 @@
 package models
 
 import (
-	utils "mycnc-rest-api/utils"
+	utils "vulnlabs-rest-api/utils"
 
 	gormlib "github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
+)
+
+const (
+	DEFAULT_ROLE = "H4x0r"
 )
 
 // User : User Account Struct
@@ -18,7 +22,6 @@ type User struct {
 	ProfilePictureURL string         `json:"profilePictureURL,omitempty"`
 	IsCommittee       bool           `json:"isCommittee" gorm:"not null;"`
 	Role              ReadOnlyString `json:"role,omitempty" gorm:"not null;"`
-	Boats             []Boat         `json:"boats,omitempty" gorm:"not null;foreignkey:OwnerID"`
 }
 
 type UserCreateRequestBody struct {
@@ -28,7 +31,6 @@ type UserCreateRequestBody struct {
 	LastName          string `json:"lastName,omitempty"`
 	PhoneNumber       string `json:"phoneNumber,omitempty"`
 	ProfilePictureURL string `json:"profilePictureURL,omitempty"`
-	IsCommittee       bool   `json:"isCommittee,omitempty"`
 }
 
 type UserUpdateRequestBody struct {
@@ -37,7 +39,6 @@ type UserUpdateRequestBody struct {
 	LastName          string `json:"lastName,omitempty"`
 	PhoneNumber       string `json:"phoneNumber,omitempty"`
 	ProfilePictureURL string `json:"profilePictureURL,omitempty"`
-	IsCommittee       bool   `json:"isComittee,omitempty"`
 }
 
 //BeforeCreate : Run before DB Insertion
@@ -48,9 +49,9 @@ func (user *User) BeforeCreate(scope *gormlib.Scope) error {
 
 	// If user is in admin list, get role admin
 	if utils.IsStringIn(user.Email, GlobalConfig.AdminUsers) {
-		user.Role = "admin"
+		user.Role = "Admin"
 	} else {
-		user.Role = "member"
+		user.Role = DEFAULT_ROLE
 	}
 
 	return nil

@@ -8,7 +8,7 @@ import (
 
 var (
 	GlobalConfig       *Config
-	ConfigFilePathName = "MYCNC_REST_API_CONFIG_FILE_PATH"
+	ConfigFilePathName = "VULNLABS_REST_API_CONFIG_FILE_PATH"
 	configFilePath     = os.Getenv(ConfigFilePathName)
 )
 

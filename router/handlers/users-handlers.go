@@ -3,11 +3,11 @@ package router
 import (
 	"encoding/json"
 	"errors"
-	"mycnc-rest-api/auth"
-	"mycnc-rest-api/models"
-	middlewares "mycnc-rest-api/router/middlewares"
-	"mycnc-rest-api/utils"
 	"net/http"
+	"vulnlabs-rest-api/auth"
+	"vulnlabs-rest-api/models"
+	middlewares "vulnlabs-rest-api/router/middlewares"
+	"vulnlabs-rest-api/utils"
 
 	customhttpresponse "github.com/terryvogelsang/go-custom-http-response"
 )
@@ -67,39 +67,6 @@ func ReadUser(env *models.Env, w http.ResponseWriter, r *http.Request) (string, 
 
 	responseDetails := customhttpresponse.NewResponseDetails(env.Config.Service, utils.GetCurrentFuncName(), customhttpresponse.CodeSuccess)
 	customhttpresponse.WriteResponse(user, responseDetails, w)
-
-	return customhttpresponse.CodeSuccess, nil
-}
-
-// ReadUserBoatsInfos : Read user boats informations from DB
-func ReadUserBoatsInfos(env *models.Env, w http.ResponseWriter, r *http.Request) (string, error) {
-
-	// Get existing user from DB
-	userID := r.Context().Value(middlewares.ContextUserKey).(string)
-	user, err := env.GORM.ReadUserFromID(userID)
-
-	if err != nil {
-		if env.GORM.IsRecordNotFoundError((err)) {
-			return customhttpresponse.CodeDoesNotExist, err
-		}
-
-		return customhttpresponse.CodeInternalError, err
-	}
-
-	// Get user boats from DB
-	boats, err := env.GORM.ReadUserBoatsInfos(user)
-
-	if err != nil {
-
-		if env.GORM.IsRecordNotFoundError(err) {
-			return customhttpresponse.CodeDoesNotExist, err
-		}
-
-		return customhttpresponse.CodeInternalError, err
-	}
-
-	responseDetails := customhttpresponse.NewResponseDetails(env.Config.Service, utils.GetCurrentFuncName(), customhttpresponse.CodeSuccess)
-	customhttpresponse.WriteResponse(boats, responseDetails, w)
 
 	return customhttpresponse.CodeSuccess, nil
 }
@@ -191,8 +158,10 @@ func UpdateUserPassword(env *models.Env, w http.ResponseWriter, r *http.Request)
 	return customhttpresponse.CodeBadLogin, errors.New("Wrong old password")
 }
 
-// UpdateUserBoats : Add boat to user in DB
-func UpdateUserBoats(env *models.Env, w http.ResponseWriter, r *http.Request) (string, error) {
+// DeleteUser : Delete user from DB
+func DeleteUser(env *models.Env, w http.ResponseWriter, r *http.Request) (string, error) {
+
+	var user = &models.User{}
 
 	// Get existing user from DB
 	userID := r.Context().Value(middlewares.ContextUserKey).(string)
@@ -206,42 +175,8 @@ func UpdateUserBoats(env *models.Env, w http.ResponseWriter, r *http.Request) (s
 		return customhttpresponse.CodeInternalError, err
 	}
 
-	// Parse Request Body and create boat struct
-	var boatCreateRequestBody models.BoatCreateRequestBody
-	err = json.NewDecoder(r.Body).Decode(&boatCreateRequestBody)
-
-	if err != nil {
-		return customhttpresponse.CodeInvalidJSON, err
-	}
-
-	err = env.GORM.UpdateUserBoats(user, &boatCreateRequestBody)
-
-	if err != nil {
-		if env.GORM.IsRecordNotFoundError((err)) {
-			return customhttpresponse.CodeDoesNotExist, err
-		}
-
-		return customhttpresponse.CodeInternalError, err
-	}
-
-	responseDetails := customhttpresponse.NewResponseDetails(env.Config.Service, utils.GetCurrentFuncName(), customhttpresponse.CodeSuccess)
-	customhttpresponse.WriteResponse(user.Boats, responseDetails, w)
-
-	return customhttpresponse.CodeSuccess, nil
-}
-
-// DeleteUser : Delete user from DB
-func DeleteUser(env *models.Env, w http.ResponseWriter, r *http.Request) (string, error) {
-
-	var user = &models.User{}
-
-	userID := r.Context().Value(middlewares.ContextUserKey).(string)
-
-	// Prevent ID Overwriting from request
-	user.ID = userID
-
 	// Delete user from DB
-	err := env.GORM.DeleteUser(user)
+	err = env.GORM.DeleteUser(user)
 
 	if err != nil {
 		return customhttpresponse.CodeInternalError, err

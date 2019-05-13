@@ -7,12 +7,12 @@ import (
 	http "net/http"
 
 	// Project Libs
-	handlers "mycnc-rest-api/router/handlers"
+	handlers "vulnlabs-rest-api/router/handlers"
 
-	models "mycnc-rest-api/models"
+	models "vulnlabs-rest-api/models"
 
 	// 3rd Party Libs
-	middlewares "mycnc-rest-api/router/middlewares"
+	middlewares "vulnlabs-rest-api/router/middlewares"
 
 	mux "github.com/gorilla/mux"
 	cors "github.com/rs/cors"
@@ -35,8 +35,6 @@ func Listen(env *models.Env) {
 	userV1.Handle("", handlers.CustomHandle(env, handlers.UpdateUser)).Methods("PUT")
 	userV1.Handle("", handlers.CustomHandle(env, handlers.DeleteUser)).Methods("DELETE")
 	userV1.Handle("/password", handlers.CustomHandle(env, handlers.UpdateUserPassword)).Methods("PUT")
-	userV1.Handle("/boats", handlers.CustomHandle(env, handlers.UpdateUserBoats)).Methods("PUT")
-	userV1.Handle("/boats", handlers.CustomHandle(env, handlers.ReadUserBoatsInfos)).Methods("GET")
 
 	// Auth
 	authV1 := v1.PathPrefix("/auth").Subrouter()
@@ -44,12 +42,6 @@ func Listen(env *models.Env) {
 	authSessionV1.Handle("", handlers.CustomHandle(env, handlers.CreateSession)).Methods("POST")
 	authSessionV1.Handle("", handlers.CustomHandle(env, handlers.UpdateSession)).Methods("PUT")
 	authSessionV1.Handle("", handlers.CustomHandle(env, middlewares.SessionExistsInStorage, handlers.DeleteSession)).Methods("DELETE")
-
-	// Regatta
-	regattaV1 := v1.PathPrefix("/regatta").Subrouter()
-	regattaV1.Handle("", handlers.CustomHandle(env, handlers.CreateRegatta)).Methods("POST")
-	regattaV1.Handle("/{regattaID}", handlers.CustomHandle(env, handlers.ReadRegatta)).Methods("GET")
-	regattaV1.Handle("/{regattaID}/boat/{boatID}/chrono", handlers.CustomHandle(env, handlers.UpdateRegattaBoatChrono)).Methods("PUT")
 
 	corsHandler := cors.New(cors.Options{
 		AllowedHeaders:   []string{"X-Requested-With"},

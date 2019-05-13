@@ -3,8 +3,8 @@ package router
 import (
 	errors "errors"
 	"fmt"
-	models "mycnc-rest-api/models"
 	http "net/http"
+	models "vulnlabs-rest-api/models"
 
 	customhttpresponse "github.com/terryvogelsang/go-custom-http-response"
 )
